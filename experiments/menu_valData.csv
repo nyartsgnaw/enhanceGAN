@@ -1,0 +1,6 @@
+valData_id,type,n_samples,pos_prop,description,addr
+0,CDK2,143,0.5138888888888888,,./data/valData/valData_rawid0.csv
+1,CDK4,112,0.6814159292035398,,./data/valData/valData_rawid1.csv
+2,CDK5,14,0.13333333333333333,,./data/valData/valData_rawid2.csv
+3,CDK6,29,0.9,,./data/valData/valData_rawid3.csv
+4,CDK9,45,0.782608695652174,,./data/valData/valData_rawid4.csv

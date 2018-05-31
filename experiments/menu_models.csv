@@ -1,0 +1,6 @@
+model_id,name,G_input_dim,G_output_dim,D_input_dim,D_output_dim,T_input_dim,T_output_dim
+GAN_1,NN,"(None, 100)","(None, 9, 20)","(None, 9, 20)","(None, 3)","(None, 9, 20)","(None, 1)"
+GAN_2,CNN,"(None, 100)","(None, 1024)","(None, 1024)","(None, 3)","(None, 1024)","(None, 1)"
+GAN_3,LSTM,,,,,,
+GAN_4,,,,,,,
+GAN_5,,,,,,,

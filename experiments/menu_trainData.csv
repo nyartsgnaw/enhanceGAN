@@ -1,0 +1,6 @@
+trainData_id,type,n_samples,pos_prop,description,addr
+0,CDK2,1287,0.47903726708074534,,./data/trainData/trainData_rawid0.csv
+1,CDK4,1005,0.6262425447316103,,./data/trainData/trainData_rawid1.csv
+2,CDK5,126,0.33858267716535434,,./data/trainData/trainData_rawid2.csv
+3,CDK6,259,0.8807692307692307,,./data/trainData/trainData_rawid3.csv
+4,CDK9,406,0.7788697788697788,,./data/trainData/trainData_rawid4.csv

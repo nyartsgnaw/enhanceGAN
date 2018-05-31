@@ -1,0 +1,6 @@
+testData_id,type,n_samples,pos_prop,description,addr
+0,CDK2,0,0.0,,./data/testData/testData_rawid0.csv
+1,CDK4,0,0.0,,./data/testData/testData_rawid1.csv
+2,CDK5,0,0.0,,./data/testData/testData_rawid2.csv
+3,CDK6,0,0.0,,./data/testData/testData_rawid3.csv
+4,CDK9,0,0.0,,./data/testData/testData_rawid4.csv
