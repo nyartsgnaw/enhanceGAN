@@ -32,7 +32,7 @@ if __name__ == '__main__':
 	except:
 		CWDIR = os.getcwd()
 
-	CV_ratio = {'train':9,'val':1,'test':0}
+	CV_ratio = {'train':8,'val':1,'test':1}
 
 	df_train = pd.read_csv(os.path.join(CWDIR,'./../CDK/df_train.csv'))
 	groups = df_train.groupby(['type'])
@@ -71,10 +71,9 @@ if __name__ == '__main__':
 		df_t = df_test.iloc[v]
 		df_t.to_csv(os.path.join(CWDIR,'./../../data/realTestData/testData_rawid{}.csv').format(i),index=True)
 		i+=1
-	menu_cols = ['testData_id','type','n_samples','pos_prop','description','addr']
-	df_menuVal = pd.DataFrame(columns = menu_cols)
-	df_menuTest = pd.DataFrame(columns = menu_cols)
-	df_menuTrain = pd.DataFrame(columns = menu_cols)
+	df_menuVal = pd.DataFrame(columns = ['valData_id','type','n_samples','pos_prop','description','addr'])
+	df_menuTest = pd.DataFrame(columns = ['testData_id','type','n_samples','pos_prop','description','addr'])
+	df_menuTrain = pd.DataFrame(columns = ['trainData_id','type','n_samples','pos_prop','description','addr'])
 
 	#get only these happend in sNebula test dataset
 

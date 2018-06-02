@@ -1,6 +1,6 @@
 trainData_id,type,n_samples,pos_prop,description,addr
-0,CDK2,1287,0.47903726708074534,,./data/trainData/trainData_rawid0.csv
-1,CDK4,1005,0.6262425447316103,,./data/trainData/trainData_rawid1.csv
-2,CDK5,126,0.33858267716535434,,./data/trainData/trainData_rawid2.csv
-3,CDK6,259,0.8807692307692307,,./data/trainData/trainData_rawid3.csv
-4,CDK9,406,0.7788697788697788,,./data/trainData/trainData_rawid4.csv
+0,CDK2,1144,0.4777292576419214,,./data/trainData/trainData_rawid0.csv
+1,CDK4,893,0.6219239373601789,,./data/trainData/trainData_rawid1.csv
+2,CDK5,112,0.35398230088495575,,./data/trainData/trainData_rawid2.csv
+3,CDK6,230,0.8787878787878788,,./data/trainData/trainData_rawid3.csv
+4,CDK9,361,0.7817679558011049,,./data/trainData/trainData_rawid4.csv

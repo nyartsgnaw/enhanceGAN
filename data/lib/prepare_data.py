@@ -50,7 +50,7 @@ class prepare_data(object):
 		return vec
 
 	def encode_seq2mat(self,seq):
-		mat = np.zeros((len(seq),20))
+		mat = np.zeros((len(seq),len(self.pos_dict)))
 		for i in range(len(seq)):
 		  pos = seq[i]
 		  mat[i,self.pos_dict[pos]] = 1.
@@ -168,7 +168,8 @@ class prepare_data(object):
 
 
 if __name__ == '__main__':
-	pdata=prepare_data(X_encode = 'onehot',Y_encode = 'integer')
+	integer = 'integer'
+	pdata=prepare_data(X_encode = X_encode,Y_encode = 'integer')
 	trainData_id = 0
 	valData_id = 0
 	testData_id = 0

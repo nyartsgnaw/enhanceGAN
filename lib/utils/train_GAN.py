@@ -71,7 +71,6 @@ import_local_package(os.path.join(CWDIR,'./../../data/lib/prepare_data.py'),['pr
 #with open(os.path.join(CWDIR,'./../../lib/.model_id'),'r') as f:
 #	model_id =f.read().strip()
 
-import_local_package(os.path.join(CWDIR,'./../../experiments/models/{}.py'.format('GAN_1')),['create_G','create_D','create_T'])
 
 
 class train_GAN(object):
@@ -183,8 +182,10 @@ class train_GAN(object):
 	def get_tester_output(self,G,D,log_dict):
 		#calculate AUC, rho of pearson coefficient, pValue of rho of pearson coefficient, accuracy on validation dataset
 		data_mix = self.mix_data(G,self.train_data)
-
-		log_dict['generated_samples'] = self.pdata.decode_mat2seq(data_mix['generated_samples'][0])
+		try:
+			log_dict['generated_samples'] = self.pdata.decode_mat2seq(data_mix['generated_samples'][0])
+		except:
+			print('Input data is not one-hot encoded matrix, no need to transfer to sequence.')
 		T = train_model(
 			model=self.T,\
 			X_train=data_mix['X_train'],\
@@ -262,8 +263,13 @@ class train_GAN(object):
 				data_mix = self.mix_data(G,self.train_data)
 				G.save(self.paths['G_path'])
 				D.save(self.paths['D_path'])
+				try:				
+					fake_seqs = [self.pdata.decode_mat2seq(x)  for x in data_mix['generated_samples']]
+				except:
+					fake_seqs = [''.join(x) for x in data_mix['generated_samples'].astype(str)]
+					print('Input data is not one-hot encoded matrix, no need to transfer to sequence.')
 				fakeData_log = pd.concat([pd.DataFrame(D.predict(data_mix['generated_samples']),columns=['predict_true','predict_fake','predict_false']),\
-						pd.DataFrame([self.pdata.decode_mat2seq(x)  for x in data_mix['generated_samples']],columns=['generated_samples'])],\
+						pd.DataFrame(fake_seqs,columns=['generated_samples'])],\
 						axis=1)
 				fakeData_log.to_csv(self.paths['fakeData_path'],index=False)
 				self.G, self.D =G,D
@@ -708,6 +714,8 @@ class train_GAN(object):
 		return {'G':G,'D':D,'records':self.records}
 
 if __name__ == '__main__':
+	X_encode = 'integer'
+	import_local_package(os.path.join(CWDIR,'./../../experiments/models/{}.py'.format('GAN_1')),['create_G','create_D','create_T'])
 
 	adam0=Adam(lr=0.005, beta_1=0.9 ,decay=0.001)
 	adam1=Adam(lr=0.0005, beta_1=0.9 ,decay=0.001)
@@ -716,17 +724,14 @@ if __name__ == '__main__':
 	rmsprop0 = RMSprop(lr=0.0004, rho=0.9, epsilon=1e-08, decay=0.01)
 	rmsprop1 = RMSprop(lr=0.003, rho=0.9, epsilon=1e-08, decay=0.01)
 
-	del prepare_data
-	import_local_package(os.path.join(CWDIR,'./../../data/lib/prepare_data.py'),['prepare_data'])
-	pdata=prepare_data(X_encode = 'onehot',Y_encode = 'integer')
+	pdata=prepare_data(X_encode = X_encode,Y_encode = 'integer')
 	_,_,X_val,Y_val,X_test,Y_test = pdata.get_data(0,0,0)
 
-	pdata=prepare_data(X_encode = 'onehot',Y_encode = 'onesided')
-	X_train,Y_train,_,_,_,_ = pdata.get_data(2,2,2)
-	length = X_train.shape[1]
+	pdata=prepare_data(X_encode = X_encode,Y_encode = 'onesided')
+	X_train,Y_train,_,_,_,_ = pdata.get_data(0,0,0)
 
 	GAN = train_GAN(
-				X_encode = 'onehot',\
+				X_encode = X_encode,\
 				Y_encode = 'onesided',\
 				exp_id = '0',\
 				D_class_weight={'true':1.2,'fake':1,'false':1.2},\
@@ -734,15 +739,15 @@ if __name__ == '__main__':
 				noise_ratio=2,\
 				save_model=True,\
 				is_generating_stochastic = False)
-	G = create_G(input_dim =100,output_dim= (length,20))
+	G = create_G(input_dim =(100,),output_dim= X_train[0].shape)
 	G.compile(loss='categorical_crossentropy', optimizer = adam0)
-	D = create_D(input_dim =(length,20),output_dim=3 )
+	D = create_D(input_dim =X_train[0].shape,output_dim=3 )
 	D.compile(loss='categorical_crossentropy', optimizer = rmsprop0)   #this will lead to poor performance of Discriminator at about epoch 39
 	G,D = GAN.init_GD_models(G,D,X_train,Y_train,n_epoch_init_G=2,n_epoch_init_D=1)
 
 	G.compile(loss='categorical_crossentropy', optimizer = adam0)
 	D.compile(loss='categorical_crossentropy', optimizer = adam1)   #this will lead to poor performance of Discriminator at about epoch 39
-	T = create_T(input_dim =(length,20),output_dim=1 )
+	T = create_T(input_dim =X_train[0].shape,output_dim=1 )
 	T.compile(loss='binary_crossentropy', optimizer = rmsprop0, metrics=['accuracy'])
 
 
@@ -764,6 +769,15 @@ if __name__ == '__main__':
 			is_early_stopping=True)
 	from utils import test_model_D
 
+	GAN = train_GAN(
+				X_encode = X_encode,\
+				Y_encode = 'integer',\
+				exp_id = '0',\
+				D_class_weight={'true':1.2,'fake':1,'false':1.2},\
+				G_class_weight={'true':1,'fake':1,'false':1},\
+				noise_ratio=2,\
+				save_model=True,\
+				is_generating_stochastic = False)
 	train_data = GAN.init_GAN_trainingData(X_train=X_val,Y_train=Y_val)
 	X = np.concatenate([train_data['X_true'],train_data['X_false']])
 	Y = np.concatenate([train_data['Y_true'],train_data['Y_false']])

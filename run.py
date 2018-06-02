@@ -86,8 +86,8 @@ def start_GAN(exp):
 	myModel = importlib.util.module_from_spec(spec)
 	spec.loader.exec_module(myModel)
 	create_G,create_D,create_T = myModel.create_G,myModel.create_D,myModel.create_T
-	G = create_G(input_dim =100,output_dim= (length,20))
-	D = create_D(input_dim =(length,20),output_dim=3 )
+	G = create_G(input_dim =(100,),output_dim= X_train[0].shape)
+	D = create_D(input_dim =X_train[0].shape,output_dim=3 )
 	G.compile(loss='categorical_crossentropy', optimizer = adam1_G, metrics=[metrics.categorical_accuracy])
 	D.compile(loss='categorical_crossentropy', optimizer = adam1_D, metrics=[metrics.categorical_accuracy])   #this will lead to poor performance of Discriminator at about epoch 39
 
@@ -102,7 +102,7 @@ def start_GAN(exp):
 				is_generating_stochastic = setup_info['is_generating_stochastic'])
 
 	if str(setup_info['is_tester']) == str(1):
-		T = create_T(input_dim =(length,20),output_dim=1 )
+		T = create_T(input_dim =X_train[0].shape,output_dim=1 )
 		T.compile(loss='binary_crossentropy', optimizer = rmsprop0, metrics=['accuracy'])
 	else:
 		T = None
