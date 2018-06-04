@@ -29,12 +29,10 @@ Python3 and the following packages are required, to install the packages on Linu
 3. install python packages by running the following command in your terminal
     ```
     pip install datetime;
-    pip install re;
     pip install pandas;
     pip install numpy;
     pip install keras;
     pip install tensorflow;
-    pip install multiprocessing;
     pip install ggplot;
     ```
 4. exit super user by running following command in your terminal
